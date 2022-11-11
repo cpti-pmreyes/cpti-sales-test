@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_cpti_saleorder_document_inherit_sale" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//div[@name='expiration_date']" position="replace">
+        <div style="width:100px"/>
+    </xpath>
+
+    <xpath expr="//h2[hasclass('mt16')]" position="replace">
+        <div style="width:200px"/>
+    </xpath>
+
+    <xpath expr="//div[@id='informations']//div[3]" position="replace">
+        <div style="width:100px"/>
+    </xpath>
+
+    <xpath expr="//div[@t-if='doc.client_order_ref']" position="replace">
+        <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto col-3 mw-100 mb-2" name="expiration_date">
+            <strong>Expiration:</strong>
+            <p class="m-0" t-field="doc.validity_date"/>
+        </div>
+    </xpath>
+
+    <xpath expr="//t[@t-set='address']" position="replace">
+        <div style="display: flex" class="row mt32 mb32" name="quotation_no">
+            <div>
+                <h2 class="mt16">
+                    <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
+                        <span t-if="doc.state not in ['draft','sent']">Order # </span>
+                        <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                    </t>
+                    <t t-if="env.context.get('proforma', False) or is_pro_forma">
+                        <span>Pro-Forma Invoice # </span>
+                    </t>
+                    <span t-field="doc.name"/>
+                </h2>
+                <div t-if="doc.client_order_ref" class="col-auto col-3 mw-100 mb-2" name="customer_name">
+                    <strong>Customer Reference:</strong>
+                    <p class="m-0" t-field="doc.client_order_ref"/>
+                </div>   
+            </div>
+            <div  class="col-auto col-3 mw-100 mb-2" >
+                <div style="width:100px"/>   
+            </div>  
+        </div>
+        <div class="row mt32 mb32">
+            <div style="padding-left:63%;margin:0">
+            <p style="margin:0" t-esc="doc.partner_id.commercial_partner_id.name"></p>
+            <p style="margin:0" t-if="doc.partner_id!=doc.partner_id.commercial_partner_id" t-esc="doc.partner_id.name" ></p>
+            <p style="margin:0" t-field="doc.partner_id" 
+                t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' />
+            <p  t-if="doc.partner_id.vat"><t t-esc="doc.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="doc.partner_id.vat"/></p>
+            </div>         
+        </div>      
+    </xpath>
+
+    <xpath expr="//div[@id='informations']" position="before">
+        <div t-if="doc.date_order and doc.state in ['draft','sent']" class="mt16" name="quotation_date">
+            <strong>Quotation Date:</strong>
+            <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'/>
+        </div>
+    </xpath>
+
+    <xpath expr="//p[@t-if='not is_html_empty(doc.payment_term_id.note)']" position="replace">
+        <p t-field="doc.note" />
+   </xpath>
+
+    <xpath expr="//p[@t-field='doc.note']" position="replace">
+        <p t-if="not is_html_empty(doc.payment_term_id.note)">
+            <span t-field="doc.payment_term_id.note"/>
+        </p>
+    </xpath>
+   
+</template>
+</odoo>

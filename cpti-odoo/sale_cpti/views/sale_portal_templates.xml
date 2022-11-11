@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_cpti_saleorder_portal_content" inherit_id="sale.sale_order_portal_content">
+    <xpath expr="//h2[hasclass('my-0')]" position="after">
+        <div>
+            <strong>Customer Reference</strong>
+            <p class="m-0" t-field="sale_order.client_order_ref"/>
+        </div>
+    </xpath>
+  
+    <xpath expr="//section[@t-if='sale_order.payment_term_id']" position="replace">
+        <section id="terms" class="mt-5" t-if="not is_html_empty(sale_order.note)">
+            <h3 class="">Terms &amp; Conditions</h3>
+            <hr class="mt-0 mb-1"/>
+            <t t-if="sale_order.terms_type == 'html'">
+                <!-- Note is plain text. This ensures a clickable link  -->
+                <t t-set="tc_url" t-value="'%s/terms' % (sale_order.get_base_url())"/>
+                <em>Terms &amp; Conditions: <a href="/terms"><t t-esc="tc_url"/></a></em>
+            </t>
+            <t t-else="">
+                <em t-field="sale_order.note"/>
+            </t>
+        </section>
+    </xpath>
+    
+    <xpath expr="//section[@id='terms']" position="replace">
+        <section class="mt-5" t-if="sale_order.payment_term_id">
+            <h3 class="">Payment terms</h3>
+            <hr class="mt-0 mb-1"/>
+            <span t-field="sale_order.payment_term_id"/>
+        </section>
+    </xpath>
+</template>
+</odoo>
