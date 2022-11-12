@@ -27,7 +27,8 @@
     # always loaded
     'data': [
         'views/sale_report_templates.xml',
-        'views/sale_portal_templates.xml'
+        'views/sale_portal_templates.xml',
+        'report/cpti_templates.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
